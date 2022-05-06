@@ -71,6 +71,8 @@ Si revisamos el debugger vamos a ver como se crasheo el programa.
 
 
 ![Before Crash](https://i.ibb.co/vVTwNK5/1-Pkv-BSPNn-BX5-Hsdc21-FURbw.png)![Server](https://i.ibb.co/PDmGdqy/2.png)
+
+
 *Una vez que el programa crashea lo volvemos a abrir con el debugger.*
 
 # EIP, ESP y JMP
@@ -91,6 +93,7 @@ En el debugger podemos ver que **EIP** vale **41414141** como el EBP esto es por
 
 
 ![EIP-ESP-JMP](https://i.ibb.co/tb63NDF/image2.png)
+
 
 ## CAPTURAMOS OFFSET Y BARCHAR
 
@@ -129,6 +132,7 @@ Ya con la cantidad de bytes generados (en mi caso 2400) los copiamos y vamos a c
 Vamos a pegar donde dice "***payload***" los caracteres generados, les tendría que quedar de la siguiente forma:
 
 ![pattern](https://i.ibb.co/r6hhdds/Captura-de-pantalla-2022-04-29-203809.png)
+
 
 Ya con el payload modificado ejecutamos el script para que mande los caracteres al programa y veamos como actúa en el debugger.
 Aclaracion: El debugger debe tener el binario corriendo antes de lanzar el exploit.
