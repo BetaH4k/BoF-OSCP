@@ -449,10 +449,6 @@ De esta forma se puede acceder con acceso a una PowerShell.
 Puede parecer medio enredado el proceso,, pero después de practicarlo algunas veces sale por instinto propio.
 
 # - Fin / Extra
-El BoF es una técnica que solamente se puede aprender si se practica, las plataformas como Tryhackme, HackTheBox, Vulnhub entre otras ofrecen miles de máquinas las cuales son vulnerables al desbordamiento de buffer, puede ser algo abrumador de entender a la primera si sos nuevo en esto, pero es cuestión de práctica.
-Espero que te haya podido ser útil para entender más como funciona el BoF y en el mejor de los casos que hayas podido explotar el binario.
-Cualquier tipo de consulta / ayuda no duden en contactarme por mis redes como **[Linkedin](https://www.linkedin.com/in/beta-casanova/)**
-Si te interesa tener clases personalizadas en vivo no dudes en contactarme.
 Como extra quisiera dejar una alternativa a los NOPS, en el caso de no querer usarlos hay una técnica donde básicamente se hace un desplazamiento del ESP (de la pila).
 Cuando EIP apunta al ESP que es donde esta nuestro shellcode, con el desplazamiento movemos el ESP una X cantidad de lugares y antes de que se ejecute nuestro shellcode va a ejecutar una serie de instrucciones que no tienen que ver con nuestras instrucciones, haciendo que una vez que estas instrucciones se ejecuten empiece a ejecutarse nuestro shellcode.
 Para hacer esto vamos a usar nams_shell lo podemos descargar desde este repositorio:  [namsoshell](https://github.com/fishstiqz/nasmshell)
@@ -468,3 +464,10 @@ Hexadecimal : \x83\xEC\x10*
 
  ![pattern]( https://i.ibb.co/RjZ2h45/nasm.png)
 
+
+# - Fin /
+
+El BoF es una técnica que solamente se puede aprender si se practica, las plataformas como Tryhackme, HackTheBox, Vulnhub entre otras ofrecen miles de máquinas las cuales son vulnerables al desbordamiento de buffer, puede ser algo abrumador de entender a la primera si sos nuevo en esto, pero es cuestión de práctica.
+Espero que te haya podido ser útil para entender más como funciona el BoF y en el mejor de los casos que hayas podido explotar el binario.
+Cualquier tipo de consulta / ayuda no duden en contactarme por mis redes como **[Linkedin](https://www.linkedin.com/in/beta-casanova/)**
+Si te interesa tener clases personalizadas en vivo no dudes en contactarme.
