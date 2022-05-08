@@ -83,8 +83,11 @@ Si revisamos el debugger vamos a ver como se crasheo el programa.
 # EIP, ESP y JMP
 
 Antes de continuar tenemos que conocer que son las instrucciones EIP, EBP y ESP, ya que estas instrucciones van a ser las que permitan explotar el Buffer entendiendo como funcionan.
+
 **ESP** (Extended Stack Pointer): Es un puntero al final de la pila. Tras la ejecución de una función, la dirección de retorno se vuelve a cargar en ESP para continuar la ejecución en el mismo punto donde había quedado.
+
 **EBP** (Extended Base Pointer): Según el compilador usado, EBP puede ser utilizado como registro de caracter general o como puntero al marco de la pila.
+
 **EIP** (Extended Instruction Pointer): Contiene la dirección actual de ejecución del programa.
 
 ![EIP-ESP-JMP](https://i.ibb.co/YdtNgpH/3.png)
