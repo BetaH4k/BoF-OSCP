@@ -13,6 +13,7 @@ Maquinas y servicios vulnerables :
 -  Overflow (HackTheBox)
 
 *En este caso para la explicación de la explotación voy a estar usando el binario de "Buffer Overflow Prep" de la plataforma Tryhackme.*
+*Aclaración : Siempre que abramos el binario en el debugger se pondra en un estado de pausa, hay que darle play para que corra y desde ahi realizar los ataques *
 
 # Explicación
 
