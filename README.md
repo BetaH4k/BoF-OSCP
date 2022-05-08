@@ -452,7 +452,7 @@ Ya con el servicio HTTP de python y netcat a la escucha, lanzamos el exploit.
 
 
 De esta forma se puede acceder con acceso a una PowerShell.
-Puede parecer medio enredado el proceso,, pero después de practicarlo algunas veces sale por instinto propio.
+Puede parecer medio enredado el proceso, pero después de practicarlo algunas veces sale por instinto propio.
 
 # - Extra
 Como extra quisiera dejar una alternativa a los NOPS, en el caso de no querer usarlos hay una técnica donde básicamente se hace un desplazamiento del ESP (de la pila).
