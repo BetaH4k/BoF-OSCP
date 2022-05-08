@@ -59,8 +59,7 @@ while len(buffer) < 30:
 	    except:  
 	        print("Could not connect to " + ip + ":" + str(port))  
 	        sys.exit(0)  
-	    time.sleep(1)  
-´´´
+	    time.sleep(1)  ´´´
 
 ![Fuzzing](https://i.ibb.co/GdZrhyr/1-Pkv-BSPNn-BX5-Hsdc21-FURbw.png)
 
