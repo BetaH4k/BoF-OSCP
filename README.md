@@ -285,7 +285,7 @@ Les tendria que quedar algo como esto :
 
 ![pattern](https://i.ibb.co/WxG5WWX/image2.png)
 
-# Exploción
+# Desbordamiento del Buffer
 
 Ya tenemos lo que sería nuestra código malicioso que nos va a servir para hacer el desbordamiento del buffer y de esa forma hacer una reverse shell para poder tener control del sistema, el problema es que este shellcode malicioso se está inyectando en el EIP y eso haría que se siga crasheando, lo que necesitamos hacer es hacer que el EIP redireccione al ESP para que sea ejecutado en la pila.
 Bien, para eso necesitamos conseguir un registro de tipo jumper, tenemos que encontrar una dirección que pase por el ESP para decirle al EIP que utilice ese jumper point.
@@ -395,7 +395,7 @@ El script completo quedaría de la siguiente forma :
     
 	    print("Could not connect.")
 
-# Servidor para establecer la conexión
+# Generando servidor para establecer la conexión
 
 Lo último que faltaría hacer sería abrir un servidor ya sea con nc, socat, rlwrap, python etc.
 Les dejo ejemplos para poner en escucha varios de estos servicios por si alguno les genera algún problema:
