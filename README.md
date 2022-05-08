@@ -456,7 +456,7 @@ Puede parecer medio enredado el proceso,, pero después de practicarlo algunas v
 
 # - Extra
 Como extra quisiera dejar una alternativa a los NOPS, en el caso de no querer usarlos hay una técnica donde básicamente se hace un desplazamiento del ESP (de la pila).
-Cuando EIP apunta al ESP que es donde esta nuestro shellcode, con el desplazamiento movemos el ESP una X cantidad de lugares y antes de que se ejecute nuestro shellcode va a ejecutar una serie de instrucciones que no tienen que ver con nuestras instrucciones, haciendo que una vez que estas instrucciones se ejecuten empiece a ejecutarse nuestro shellcode.
+Cuando EIP apunta al ESP que es donde esta nuestro shellcode, con el desplazamiento movemos el ESP una X cantidad de lugares y antes de que se ejecute nuestro shellcode va a ejecutar una serie de instrucciones que son distintas a las nuestras, haciendo que una vez que estas instrucciones se ejecuten empiece a ejecutarse nuestro shellcode.
 Para hacer esto vamos a usar nams_shell lo podemos descargar desde este repositorio:  [namsoshell](https://github.com/fishstiqz/nasmshell)
 lo ejecutamos con Python y escribimos:
 
