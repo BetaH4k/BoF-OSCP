@@ -67,11 +67,15 @@ Ahora que pasaría si en vez de pasarle como parámetro "test" le pasamos 2000 c
 
 Podemos ver que el programa crashea al momento de llegar a los 2000 Bytes.
 Si revisamos el debugger vamos a ver como se crasheo el programa.
+
 **1** - Antes de crashear el programa
+
 **2** - Despues del crasheo
 
 
-![Before Crash](https://i.ibb.co/vVTwNK5/1-Pkv-BSPNn-BX5-Hsdc21-FURbw.png)![Server](https://i.ibb.co/PDmGdqy/2.png)
+![Before Crash](https://i.ibb.co/vVTwNK5/1-Pkv-BSPNn-BX5-Hsdc21-FURbw.png)
+
+![Server](https://i.ibb.co/PDmGdqy/2.png)
 
 
 *Una vez que el programa crashea lo volvemos a abrir con el debugger.*
