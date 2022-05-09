@@ -416,7 +416,7 @@ En mi caso voy a abrir el servidor con nc, lanzamos el exploit y que surja la **
 ![pattern](https://i.ibb.co/KWXQxWK/image2.png)
 
 
-# Accediendo a traves de una PowerShell
+# Accediendo a través de una PowerShell
 Una de las cosas que podemos hacer es acceder desde una PowerShell para poder tener un poco más de control sobre la máquina ya que tenemos el control total sobre el EIP y ESP podemos variar la forma de acceder y de esa forma tener una alternativa.
 
 Lo primero que vamos a hacer es descargar y configurar una utilidad llamada nishang con los siguientes comandos :
